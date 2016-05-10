@@ -3,6 +3,6 @@
 
 ## Overview
 
-![Demo Overview](https://github.com/g763007297/GQGesVCTransition/Sceenshots/demo.gif)
+![Demo Overview](https://github.com/g763007297/GQGesVCTransition/blob/master/Screenshot/demo.gif)
 
 ## Basic usage
