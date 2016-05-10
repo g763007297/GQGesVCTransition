@@ -6,3 +6,10 @@
 ![Demo Overview](https://github.com/g763007297/GQGesVCTransition/blob/master/Screenshot/demo.gif)
 
 ## Basic usage
+``` objc
+  引用头文件#import "GQGesVCTransition.h"
+  
+  一句话加入手势返回:
+  [GQGesVCTransition validateGesBackWithType:GQGesVCTransitionTypePanWithPercentRight withScreenWidthPercent:0 withRequestFailToLoopScrollView:YES];
+  
+```
