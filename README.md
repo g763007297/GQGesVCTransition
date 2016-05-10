@@ -12,8 +12,11 @@
 ## Basic usage
 
 1.下载 GQGesVCTransition 文件夹内的所有内容 包括GQGesVCTransition.h和GQGesVCTransition.m。
+
 2.将 GQGesVCTransition 内的源文件添加(拖放)到你的工程。
+
 3.在Appdelegate中引用头文件 GQGesVCTransition.h。
+
 4.最后在Appdelegate.m中添加一句代码加入手势返回。
 
 ``` objc
