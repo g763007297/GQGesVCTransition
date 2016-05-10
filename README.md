@@ -10,10 +10,17 @@
 ![Demo Overview](https://github.com/g763007297/GQGesVCTransition/blob/master/Screenshot/demo.gif)
 
 ## Basic usage
+
+1.下载 GQGesVCTransition 文件夹内的所有内容 包括GQGesVCTransition.h和GQGesVCTransition.m。
+2.将 GQGesVCTransition 内的源文件添加(拖放)到你的工程。
+3.在Appdelegate中引用头文件 GQGesVCTransition.h。
+4.最后在Appdelegate.m中添加一句代码加入手势返回。
+
 ``` objc
-  引用头文件#import "GQGesVCTransition.h"
-  
-  一句话加入手势返回:
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [GQGesVCTransition validateGesBackWithType:GQGesVCTransitionTypePanWithPercentRight withScreenWidthPercent:0 withRequestFailToLoopScrollView:YES];
-  
+  return YES;
+}
+
 ```
