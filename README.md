@@ -3,7 +3,7 @@
 [![support](https://img.shields.io/badge/support-iOS7.0%2B-blue.svg)](https://www.apple.com/nl/ios/)&nbsp;
 
 # GQGesVCTransition
-支持滑动手势返回   支持iOS7以上系统，完美与ScrollView兼容，可自定义滑动返回
+支持滑动手势返回   支持iOS7以上系统，完美与ScrollView兼容，可自定义滑动返回范围
 
 ## Overview
 
