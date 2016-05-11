@@ -32,12 +32,12 @@ typedef enum {
 @interface UIView(__GQGesVCTransition)
 
 /**
- *  设置View不响应手势
+ *  设置View不响应我们的手势
  */
 - (void)disableVCTransition;
 
 /**
- *  设置View响应手势
+ *  设置View响应我们的手势
  */
 - (void)enableVCTransition;
 

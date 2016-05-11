@@ -8,6 +8,8 @@
 
 #import "DetailViewController.h"
 
+#import "GQGesVCTransition.h"
+
 @interface DetailViewController ()
 
 @end

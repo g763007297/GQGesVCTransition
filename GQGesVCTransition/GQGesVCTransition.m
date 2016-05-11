@@ -229,6 +229,7 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
         //禁用系统的手势
         self.interactivePopGestureRecognizer.enabled = NO;
     }
+    self.delegate = self;
     //在nav的view上添加我们的手势
     [self.view addGestureRecognizer:self.__GQGesVCTransition_panGestureRecognizer];
 }
@@ -253,7 +254,7 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
         return NO;
     }
     
-    if (view.ableVCTransition) {
+    if (!view.ableVCTransition) {
         return NO;
     }
     
@@ -261,7 +262,7 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
     UIView* subview = [view hitTest:loc withEvent:nil];
     UIView *superView = subview;
     while (superView!=view) {
-        if (superView.ableVCTransition) { //这个view忽略了拖返
+        if (!superView.ableVCTransition) { //这个view忽略了拖返
             return NO;
         }
         superView = superView.superview;
@@ -300,6 +301,7 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
     }
     return NO;
 }
+
 @end
 
 @implementation UINavigationController(DisableVCTransition)
@@ -321,7 +323,7 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
 
 - (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)recognizer{
     //取消scrollview上面的自带手势
-    if (__GQGesRequestFailLoopScrollView) {
+    if (__GQGesRequestFailLoopScrollView&&self.ableVCTransition) {
         UIView *cell = [recognizer view];
         CGPoint velocity = [recognizer velocityInView:cell];
         //如果scrollview滑动到左边界并且是往左滑
