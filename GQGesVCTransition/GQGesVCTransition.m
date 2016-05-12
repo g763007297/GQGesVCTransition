@@ -229,7 +229,6 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
         //禁用系统的手势
         self.interactivePopGestureRecognizer.enabled = NO;
     }
-    self.delegate = self;
     //在nav的view上添加我们的手势
     [self.view addGestureRecognizer:self.__GQGesVCTransition_panGestureRecognizer];
 }
