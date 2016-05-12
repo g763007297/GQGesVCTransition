@@ -22,7 +22,8 @@
 ``` objc
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [GQGesVCTransition validateGesBackWithType:GQGesVCTransitionTypePanWithPercentRight withScreenWidthPercent:0 withRequestFailToLoopScrollView:YES];
+  //一句话给你的app添加手势返回
+  [GQGesVCTransition validateGesBack];
   return YES;
 }
 
