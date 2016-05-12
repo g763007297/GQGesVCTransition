@@ -362,6 +362,18 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
 
 @implementation GQGesVCTransition
 
++ (void)validateGesBack{
+    [self validateGesBackWithType:GQGesVCTransitionTypePanWithPercentLeft withScreenWidthPercent:0 withRequestFailToLoopScrollView:NO];
+}
+
++ (void)validateGesBackWithType:(GQGesVCTransitionType)type withRequestFailToLoopScrollView:(BOOL)requestFail{
+    [self validateGesBackWithType:type withScreenWidthPercent:0 withRequestFailToLoopScrollView:requestFail];
+}
+
++ (void)validateGesBackWithType:(GQGesVCTransitionType)type withScreenWidthPercent:(NSNumber *)percent{
+    [self validateGesBackWithType:type withScreenWidthPercent:percent withRequestFailToLoopScrollView:NO];
+}
+
 + (void)validateGesBackWithType:(GQGesVCTransitionType)type withScreenWidthPercent:(NSNumber *)percent withRequestFailToLoopScrollView:(BOOL)requestFail
 {
     //IOS7以下不可用

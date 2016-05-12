@@ -19,6 +19,27 @@ typedef enum {
 @interface GQGesVCTransition : NSObject
 
 /**
+ *  精简代码:全部设置默认值
+ */
++ (void)validateGesBack;
+
+/**
+ *   精简代码模式
+ *
+ *  @param type        拖拽模式
+ *  @param requestFail 界面中scrollview滑动到左边界时是否响应返回手势  默认为NO
+ */
++ (void)validateGesBackWithType:(GQGesVCTransitionType)type withRequestFailToLoopScrollView:(BOOL)requestFail;
+
+/**
+ *  精简代码模式
+ *
+ *  @param type 拖拽模式
+ *  @param percent     屏幕响应手势百分比
+ */
++ (void)validateGesBackWithType:(GQGesVCTransitionType)type withScreenWidthPercent:(NSNumber *)percent;
+
+/**
 *  全局开启手势返回模式
 *
 *  @param type        拖拽模式
