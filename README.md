@@ -11,11 +11,11 @@
 
 ## CocoaPods
 
-Add pod 'GQGesVCTransition' to your Podfile.
+1.在 Podfile 中添加 pod 'GQGesVCTransition'。
 
-Run pod install or pod update.
+2.执行 pod install 或 pod update。
 
-Import GQGesVCTransition.h.
+3.导入 GQGesVCTransition.h。
 
 ## Basic usage
 
