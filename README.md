@@ -12,7 +12,9 @@
 ## CocoaPods
 
 Add pod 'GQGesVCTransition' to your Podfile.
+
 Run pod install or pod update.
+
 Import GQGesVCTransition.h.
 
 ## Basic usage
