@@ -9,6 +9,12 @@
 
 ![Demo Overview](https://github.com/g763007297/GQGesVCTransition/blob/master/Screenshot/demo.gif)
 
+## CocoaPods
+
+Add pod 'GQGesVCTransition' to your Podfile.
+Run pod install or pod update.
+Import GQGesVCTransition.h.
+
 ## Basic usage
 
 1.下载 GQGesVCTransition 文件夹内的所有内容 包括GQGesVCTransition.h和GQGesVCTransition.m。
