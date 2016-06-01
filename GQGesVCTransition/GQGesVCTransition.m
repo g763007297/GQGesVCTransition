@@ -9,6 +9,17 @@
 #import "GQGesVCTransition.h"
 #import <objc/runtime.h>
 
+#define GQ_DYNAMIC_PROPERTY_OBJECT_type(_getter_, _setter_, _association_, _type_)\
+
+#define GQ_DYNAMIC_PROPERTY_OBJECT(_getter_, _setter_, _association_, _type_) \
+- (void)_setter_ : (_type_)object { \
+[self willChangeValueForKey:@#_getter_]; \
+objc_setAssociatedObject(self, _cmd, object, OBJC_ASSOCIATION_ ## _association_); \
+[self didChangeValueForKey:@#_getter_]; \
+} \
+- (_type_)_getter_ { \
+return objc_getAssociatedObject(self, @selector(_setter_:)); \
+}
 
 /**
  *  根据selector获取methold
@@ -20,13 +31,13 @@
  *  @return 方法
  */
 #define __getMethod(_class, _value, _instanceMethod) ({\
-    Method _method =  class_getInstanceMethod(_class , _value); \
-    _instanceMethod = YES; \
-    if(!_method){\
-        _method = class_getClassMethod(_class, _value);\
-        _instanceMethod = NO;\
-    }\
-    _method;\
+Method _method =  class_getInstanceMethod(_class , _value); \
+_instanceMethod = YES; \
+if(!_method){\
+_method = class_getClassMethod(_class, _value);\
+_instanceMethod = NO;\
+}\
+_method;\
 })
 
 /**
@@ -69,7 +80,7 @@ NSString * const kGQGesVCTransition_NavController_OfPan = @"__GQGesVCTransition_
  *
  *  @return  yes or no
  */
-BOOL __JudgeClassSelectorExchange(Class c, SEL exchangedSEL, Method oldMethod , BOOL isInstanceMethod){
+static BOOL __JudgeClassSelectorExchange(Class c, SEL exchangedSEL, Method oldMethod , BOOL isInstanceMethod){
     BOOL instanceMethod = YES;
     Method exchangedMethod = __getMethod(c, exchangedSEL, instanceMethod);
     IMP exchangedIMP = method_getImplementation(exchangedMethod);
@@ -91,7 +102,7 @@ BOOL __JudgeClassSelectorExchange(Class c, SEL exchangedSEL, Method oldMethod , 
 
 #pragma mark - hook大法
 //静态就交换静态，实例方法就交换实例方法  (交换方法的IMP)   调用的是老方法名  但跑的是我们的方法
-BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
+static BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
 {
     //获取方法
     BOOL isOldInstanceMethod = YES;
@@ -119,25 +130,25 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
 
 @implementation UIView(__GQGesVCTransition)
 
-- (void)disableVCTransition
+- (void)disableGQVCTransition
 {
-    [self setAbleVCTransition:NO];
+    [self setDisableVCTransition:YES];
 }
 
-- (void)enableVCTransition
+- (void)enableGQVCTransition
 {
-    [self setAbleVCTransition:YES];
+    [self setDisableVCTransition:NO];
 }
 
-- (BOOL)ableVCTransition
+- (BOOL)disableVCTransition
 {
     return [objc_getAssociatedObject(self, &kGQGesVCTransition_AbleViewTransition) boolValue];
 }
 
-- (void)setAbleVCTransition:(BOOL)ableVCTransition
+- (void)setDisableVCTransition:(BOOL)disableVCTransition
 {
     [self willChangeValueForKey:kGQGesVCTransition_AbleViewTransition];
-    objc_setAssociatedObject(self, &kGQGesVCTransition_AbleViewTransition, @(ableVCTransition), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, &kGQGesVCTransition_AbleViewTransition, @(disableVCTransition), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self didChangeValueForKey:kGQGesVCTransition_AbleViewTransition];
 }
 
@@ -151,17 +162,7 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
 #pragma mark - UIGestureRecognizer category implementation
 @implementation UIGestureRecognizer(__GQGesVCTransition)
 
-- (void)set__GQGesVCTransition_NavController:(UINavigationController *)__VCTransition_NavController
-{
-    [self willChangeValueForKey:kGQGesVCTransition_NavController_OfPan];
-    objc_setAssociatedObject(self, &kGQGesVCTransition_NavController_OfPan, __VCTransition_NavController, OBJC_ASSOCIATION_ASSIGN);
-    [self didChangeValueForKey:kGQGesVCTransition_NavController_OfPan];
-}
-
-- (UINavigationController *)__GQGesVCTransition_NavController
-{
-    return objc_getAssociatedObject(self, &kGQGesVCTransition_NavController_OfPan);
-}
+GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_NavController, set__GQGesVCTransition_NavController, ASSIGN, UINavigationController*);
 
 @end
 
@@ -193,17 +194,8 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
 @implementation UINavigationController(_GQGesVCTransition)
 
 #pragma mark getter and setter
-- (void)set__GQGesVCTransition_panGestureRecognizer:(UIPanGestureRecognizer *)__VCTransition_panGestureRecognizer
-{
-    [self willChangeValueForKey:k__GQGesVCTransition_GestureRecognizer];
-    objc_setAssociatedObject(self, &k__GQGesVCTransition_GestureRecognizer, __VCTransition_panGestureRecognizer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self didChangeValueForKey:k__GQGesVCTransition_GestureRecognizer];
-}
 
-- (UIPanGestureRecognizer *)__GQGesVCTransition_panGestureRecognizer
-{
-    return objc_getAssociatedObject(self, &k__GQGesVCTransition_GestureRecognizer);
-}
+GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_panGestureRecognizer, set__GQGesVCTransition_panGestureRecognizer, RETAIN_NONATOMIC, UIPanGestureRecognizer*);
 
 #pragma mark 我自己的方法
 - (void)__GQGesVCTransition_ViewDidLoad
@@ -253,7 +245,7 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
         return NO;
     }
     
-    if (!view.ableVCTransition) {
+    if (view.disableVCTransition) {
         return NO;
     }
     
@@ -261,7 +253,7 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
     UIView* subview = [view hitTest:loc withEvent:nil];
     UIView *superView = subview;
     while (superView!=view) {
-        if (!superView.ableVCTransition) { //这个view忽略了拖返
+        if (superView.disableVCTransition) { //这个view忽略了拖返
             return NO;
         }
         superView = superView.superview;
@@ -300,13 +292,12 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
     }
     return NO;
 }
-
 @end
 
 @implementation UINavigationController(DisableVCTransition)
 
 // 设置导航控制器是否响应手势
-- (void)enabledVCTransition:(BOOL)enabled
+- (void)enabledGQVCTransition:(BOOL)enabled
 {
     self.__GQGesVCTransition_panGestureRecognizer.enabled = enabled;
 }
@@ -322,14 +313,14 @@ BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
 
 - (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)recognizer{
     //取消scrollview上面的自带手势
-    if (__GQGesRequestFailLoopScrollView&&self.ableVCTransition) {
+    if (__GQGesRequestFailLoopScrollView&&!self.disableVCTransition) {
         UIView *cell = [recognizer view];
         CGPoint velocity = [recognizer velocityInView:cell];
         //如果scrollview滑动到左边界并且是往左滑
         if (self.contentOffset.x<=0&&velocity.x>0) {
-//            if (self.contentSize.width <= self.frame.size.width) {
+            //            if (self.contentSize.width <= self.frame.size.width) {
             return NO;
-//            }
+            //            }
         }
     }
     return YES;

@@ -26,7 +26,7 @@ typedef enum {
 /**
  *   精简代码模式
  *
- *  @param type        拖拽模式
+ *  @param type        拖拽模式  默认为全屏向左拖动模式 百分比从左开始计算
  *  @param requestFail 界面中scrollview滑动到左边界时是否响应返回手势  默认为NO
  */
 + (void)validateGesBackWithType:(GQGesVCTransitionType)type withRequestFailToLoopScrollView:(BOOL)requestFail;
@@ -34,16 +34,16 @@ typedef enum {
 /**
  *  精简代码模式
  *
- *  @param type 拖拽模式
- *  @param percent     屏幕响应手势百分比
+ *  @param type 拖拽模式  默认为全屏向左拖动模式 百分比从左开始计算
+ *  @param percent     屏幕响应手势百分比  默认全屏
  */
 + (void)validateGesBackWithType:(GQGesVCTransitionType)type withScreenWidthPercent:(NSNumber *)percent;
 
 /**
 *  全局开启手势返回模式
 *
-*  @param type        拖拽模式
-*  @param percent     屏幕响应手势百分比
+*  @param type        拖拽模式  默认为全屏向左拖动模式 百分比从左开始计算
+*  @param percent     屏幕响应手势百分比  默认全屏
 *  @param requestFail 界面中scrollview滑动到左边界时是否响应返回手势  默认为NO
 */
 + (void)validateGesBackWithType:(GQGesVCTransitionType)type withScreenWidthPercent:(NSNumber *)percent withRequestFailToLoopScrollView:(BOOL)requestFail;
@@ -55,12 +55,12 @@ typedef enum {
 /**
  *  设置View不响应我们的手势
  */
-- (void)disableVCTransition;
+- (void)disableGQVCTransition;
 
 /**
  *  设置View响应我们的手势
  */
-- (void)enableVCTransition;
+- (void)enableGQVCTransition;
 
 @end
 
@@ -71,6 +71,6 @@ typedef enum {
  *
  *  @param enabled YES OR NO
  */
-- (void)enabledVCTransition:(BOOL)enabled;
+- (void)enabledGQVCTransition:(BOOL)enabled;
 
 @end
