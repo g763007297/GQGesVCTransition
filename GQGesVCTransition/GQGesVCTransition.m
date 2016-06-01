@@ -208,7 +208,7 @@ GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_panGestureRecognizer, set__GQGesV
         UIPanGestureRecognizer *gestureRecognizer = nil;
         if (__GQGesVCTransitionType == GQGesVCTransitionTypeScreenEdgePan) {
             gestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self.interactivePopGestureRecognizer.delegate action:NSSelectorFromString(@"handleNavigationTransition:")];
-            ((UIScreenEdgePanGestureRecognizer*)gestureRecognizer).edges = UIRectEdgeAll;
+            ((UIScreenEdgePanGestureRecognizer*)gestureRecognizer).edges = UIRectEdgeLeft;
         }else{
             gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self.interactivePopGestureRecognizer.delegate action:NSSelectorFromString(@"handleNavigationTransition:")];
         }
