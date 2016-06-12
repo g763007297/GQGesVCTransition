@@ -63,7 +63,6 @@ UIView* CreatView (CGRect rect, UIColor *color){
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

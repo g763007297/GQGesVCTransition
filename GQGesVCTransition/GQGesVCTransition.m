@@ -9,16 +9,46 @@
 #import "GQGesVCTransition.h"
 #import <objc/runtime.h>
 
-#define GQ_DYNAMIC_PROPERTY_OBJECT_type(_getter_, _setter_, _association_, _type_)\
+/**
+ *  BOOL的get set方法
+ *
+ *  @param _getter_      get方法
+ *  @param _setter_      set方法
+ *  @param _association_ 关联策略
+ *  @param _type_        值类型
+ *
+ *  @return get:_type_  set:void
+ */
+
+#define GQ_DYNAMIC_PROPERTY_BOOL(_getter_, _setter_)\
+- (void)_setter_:(BOOL)object{\
+    [self willChangeValueForKey:@#_getter_]; \
+    objc_setAssociatedObject(self, _cmd, @(object), OBJC_ASSOCIATION_ASSIGN); \
+    [self didChangeValueForKey:@#_getter_]; \
+}\
+-(BOOL)_getter_{\
+    return [objc_getAssociatedObject(self, @selector(_setter_:)) boolValue];\
+}\
+
+/**
+ *  NSObject的get set方法
+ *
+ *  @param _getter_      get方法
+ *  @param _setter_      set方法
+ *  @param _association_ 关联策略
+ *  @param _type_        值类型
+ *
+ *  @return get:_type_  set:void
+ */
 
 #define GQ_DYNAMIC_PROPERTY_OBJECT(_getter_, _setter_, _association_, _type_) \
 - (void)_setter_ : (_type_)object { \
-[self willChangeValueForKey:@#_getter_]; \
-objc_setAssociatedObject(self, _cmd, object, OBJC_ASSOCIATION_ ## _association_); \
-[self didChangeValueForKey:@#_getter_]; \
+    [self willChangeValueForKey:@#_getter_]; \
+    objc_setAssociatedObject(self, _cmd, object, OBJC_ASSOCIATION_ ## _association_); \
+    [self didChangeValueForKey:@#_getter_]; \
 } \
 - (_type_)_getter_ { \
-return objc_getAssociatedObject(self, @selector(_setter_:)); \
+    return objc_getAssociatedObject(self, @selector(_setter_:)); \
 }
 
 /**
@@ -31,13 +61,13 @@ return objc_getAssociatedObject(self, @selector(_setter_:)); \
  *  @return 方法
  */
 #define __getMethod(_class, _value, _instanceMethod) ({\
-Method _method =  class_getInstanceMethod(_class , _value); \
-_instanceMethod = YES; \
-if(!_method){\
-_method = class_getClassMethod(_class, _value);\
-_instanceMethod = NO;\
-}\
-_method;\
+    Method _method =  class_getInstanceMethod(_class , _value); \
+    _instanceMethod = YES; \
+    if(!_method){\
+        _method = class_getClassMethod(_class, _value);\
+        _instanceMethod = NO;\
+    }\
+    _method;\
 })
 
 /**
@@ -80,7 +110,8 @@ NSString * const kGQGesVCTransition_NavController_OfPan = @"__GQGesVCTransition_
  *
  *  @return  yes or no
  */
-static BOOL __JudgeClassSelectorExchange(Class c, SEL exchangedSEL, Method oldMethod , BOOL isInstanceMethod){
+static BOOL __JudgeClassSelectorExchange(Class c, SEL exchangedSEL, Method oldMethod , BOOL isInstanceMethod)
+{
     BOOL instanceMethod = YES;
     Method exchangedMethod = __getMethod(c, exchangedSEL, instanceMethod);
     IMP exchangedIMP = method_getImplementation(exchangedMethod);
@@ -140,17 +171,7 @@ static BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
     [self setDisableVCTransition:NO];
 }
 
-- (BOOL)disableVCTransition
-{
-    return [objc_getAssociatedObject(self, &kGQGesVCTransition_AbleViewTransition) boolValue];
-}
-
-- (void)setDisableVCTransition:(BOOL)disableVCTransition
-{
-    [self willChangeValueForKey:kGQGesVCTransition_AbleViewTransition];
-    objc_setAssociatedObject(self, &kGQGesVCTransition_AbleViewTransition, @(disableVCTransition), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self didChangeValueForKey:kGQGesVCTransition_AbleViewTransition];
-}
+GQ_DYNAMIC_PROPERTY_BOOL(disableVCTransition, setDisableVCTransition);
 
 @end
 
@@ -162,7 +183,7 @@ static BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
 #pragma mark - UIGestureRecognizer category implementation
 @implementation UIGestureRecognizer(__GQGesVCTransition)
 
-GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_NavController, set__GQGesVCTransition_NavController, ASSIGN, UINavigationController*);
+GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_NavController, set__GQGesVCTransition_NavController, RETAIN_NONATOMIC, UINavigationController*);
 
 @end
 
@@ -278,7 +299,8 @@ GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_panGestureRecognizer, set__GQGesV
 }
 
 //根据手势的类型和百分比决定是否接受手势
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
     UINavigationController *navVC = self;
     CGPoint point = [touch locationInView:navVC.view];
     if (__GQGesVCTransitionType == GQGesVCTransitionTypePanWithPercentLeft) {
@@ -311,7 +333,8 @@ GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_panGestureRecognizer, set__GQGesV
 
 @implementation UIScrollView(__VCTransistion)
 
-- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)recognizer{
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)recognizer
+{
     //取消scrollview上面的自带手势
     if (__GQGesRequestFailLoopScrollView&&!self.disableVCTransition) {
         UIView *cell = [recognizer view];
@@ -327,7 +350,8 @@ GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_panGestureRecognizer, set__GQGesV
 }
 
 //设置手势共存
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
     return __GQGesRequestFailLoopScrollView;
 }
 
@@ -353,15 +377,18 @@ GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_panGestureRecognizer, set__GQGesV
 
 @implementation GQGesVCTransition
 
-+ (void)validateGesBack{
++ (void)validateGesBack
+{
     [self validateGesBackWithType:GQGesVCTransitionTypePanWithPercentLeft withScreenWidthPercent:0 withRequestFailToLoopScrollView:NO];
 }
 
-+ (void)validateGesBackWithType:(GQGesVCTransitionType)type withRequestFailToLoopScrollView:(BOOL)requestFail{
++ (void)validateGesBackWithType:(GQGesVCTransitionType)type withRequestFailToLoopScrollView:(BOOL)requestFail
+{
     [self validateGesBackWithType:type withScreenWidthPercent:0 withRequestFailToLoopScrollView:requestFail];
 }
 
-+ (void)validateGesBackWithType:(GQGesVCTransitionType)type withScreenWidthPercent:(NSNumber *)percent{
++ (void)validateGesBackWithType:(GQGesVCTransitionType)type withScreenWidthPercent:(NSNumber *)percent
+{
     [self validateGesBackWithType:type withScreenWidthPercent:percent withRequestFailToLoopScrollView:NO];
 }
 

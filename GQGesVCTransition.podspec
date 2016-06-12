@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "GQGesVCTransition"
-s.version = "0.0.3"
+  s.version = "0.0.4"
   s.summary      = "一句话添加滑动手势返回，完美与ScrollView兼容，可自定义滑动返回范围。"
 
   s.homepage     = "https://github.com/g763007297/GQGesVCTransition"
