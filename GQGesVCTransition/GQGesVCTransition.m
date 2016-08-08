@@ -148,12 +148,11 @@ static BOOL __GQGesVCTransition_SwizzleIMP(Class c, SEL oldSEL, SEL newSEL)
     
     //自身已经有了就添加不成功，直接交换即可
     if(class_addMethod(c, oldSEL, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))){
-        //添加成功一般情况是因为，origSEL本身是在c的父类里。这里添加成功了一个继承方法。
+        //添加成功一般情况是因为，oldSEL本身是在self的父类里。这里添加成功了一个继承方法。  category的话是永远都能添加上去，谁都不能保证谁覆盖谁  如果是category复写另外一个category的方法的话使用method_exchangeImplementations直接替换
         class_replaceMethod(c, newSEL, method_getImplementation(oldMethod), method_getTypeEncoding(oldMethod));
     }else{
         method_exchangeImplementations(oldMethod, newMethod);
     }
-    
     return __JudgeClassSelectorExchange(c, newSEL, oldMethod, isOldInstanceMethod);
 }
 
