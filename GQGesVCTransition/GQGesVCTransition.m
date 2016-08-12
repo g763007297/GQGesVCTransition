@@ -228,7 +228,7 @@ GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_panGestureRecognizer, set__GQGesV
         UIPanGestureRecognizer *gestureRecognizer = nil;
         if (__GQGesVCTransitionType == GQGesVCTransitionTypeScreenEdgePan) {
             gestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self.interactivePopGestureRecognizer.delegate action:NSSelectorFromString(@"handleNavigationTransition:")];
-            ((UIScreenEdgePanGestureRecognizer*)gestureRecognizer).edges = UIRectEdgeLeft;
+            ((UIScreenEdgePanGestureRecognizer*)gestureRecognizer).edges = UIRectEdgeAll;
         }else{
             gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self.interactivePopGestureRecognizer.delegate action:NSSelectorFromString(@"handleNavigationTransition:")];
         }
@@ -253,7 +253,7 @@ GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_panGestureRecognizer, set__GQGesV
         CGPoint loc = [recognizer locationInView:view];
         UIView* superView = [view hitTest:loc withEvent:nil];
         while (superView != nil) {
-            if ([superView isKindOfClass:[UIScrollView class]]&&((UIScrollView*)superView).scrollEnabled&&((UIScrollView*)superView).contentSize.width > ((UIScrollView*)superView).frame.size.width&&((UIScrollView*)superView).contentOffset.x>0) {
+            if ([[superView class] isSubclassOfClass:[UIScrollView class]]&&((UIScrollView*)superView).scrollEnabled&&((UIScrollView*)superView).contentSize.width > ((UIScrollView*)superView).frame.size.width&&((UIScrollView*)superView).contentOffset.x>0) {
                 return NO;
             }
             superView = superView.superview;
@@ -280,7 +280,7 @@ GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_panGestureRecognizer, set__GQGesV
     }
     
     //如果开始方向不对即不启用
-    if (__GQGesVCTransitionType==(GQGesVCTransitionTypePanWithPercentRight||GQGesVCTransitionTypePanWithPercentLeft)){
+    if (__GQGesVCTransitionType==GQGesVCTransitionTypePanWithPercentRight||__GQGesVCTransitionType==GQGesVCTransitionTypePanWithPercentLeft){
         CGPoint velocity = [recognizer velocityInView:navVC.view];
         if(velocity.x<=0) {
             return NO;
@@ -290,7 +290,7 @@ GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_panGestureRecognizer, set__GQGesV
         translation.x = translation.x==0?0.00001f:translation.x;
         CGFloat ratio = (fabs(translation.y)/fabs(translation.x));
         
-        if ((translation.y>0&&ratio>0.618f)||(translation.y<0&&ratio>0.2f)) {
+        if ((translation.y>0&&ratio>0.618f)||(translation.y<0&&ratio>0.2f)||translation.x == 0) {
             return NO;
         }
     }
@@ -326,7 +326,7 @@ GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_panGestureRecognizer, set__GQGesV
 @end
 
 #pragma mark - UIScrollView category ，可让scrollView在一个良好的关系下并存
-@interface UIScrollView(__VCTransistion)
+@interface UIScrollView(__VCTransistion)<UIGestureRecognizerDelegate>
 
 @end
 
@@ -335,36 +335,40 @@ GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_panGestureRecognizer, set__GQGesV
 - (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)recognizer
 {
     //取消scrollview上面的自带手势
-    if (__GQGesRequestFailLoopScrollView&&!self.disableVCTransition) {
+    if (__GQGesRequestFailLoopScrollView&&!self.disableVCTransition&&!recognizer.__GQGesVCTransition_NavController) {
         UIView *cell = [recognizer view];
         CGPoint velocity = [recognizer velocityInView:cell];
         //如果scrollview滑动到左边界并且是往左滑
+        CGPoint translation = [recognizer translationInView:cell];
+        if (translation.x == 0) {
+            return YES;
+        }
         if (self.contentOffset.x<=0&&velocity.x>0) {
-            //            if (self.contentSize.width <= self.frame.size.width) {
-            return NO;
-            //            }
+            CGFloat ratio = (fabs(translation.x)/fabs(translation.y));
+            if ((translation.y>=0&&ratio>0.618f)||(translation.y<0&&ratio>0.2f)) {
+                return NO;
+            }
         }
     }
     return YES;
 }
 
-//设置手势共存
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    return __GQGesRequestFailLoopScrollView;
-}
-
 //在scrollview上干掉我们的手势，避免手势冲突
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if ([gestureRecognizer isEqual:self.panGestureRecognizer]) {
+    if ([gestureRecognizer isEqual:self.panGestureRecognizer])
+    {
         //如果此scrollView有旋转就要忽略了
-        if (CGAffineTransformEqualToTransform(CGAffineTransformMakeRotation(-M_PI*0.5),self.transform)||CGAffineTransformEqualToTransform(CGAffineTransformMakeRotation(M_PI*0.5),self.transform)) {
-            return NO;
-        }else if (self.contentSize.width>self.frame.size.width) {
+        if (CGAffineTransformEqualToTransform(CGAffineTransformMakeRotation(-M_PI*0.5),self.transform)||CGAffineTransformEqualToTransform(CGAffineTransformMakeRotation(M_PI*0.5),self.transform))
+        {
             return NO;
         }
-        if (otherGestureRecognizer.__GQGesVCTransition_NavController) {
+        else if (self.contentSize.width>self.frame.size.width)
+        {
+            return NO;
+        }
+        if (otherGestureRecognizer.__GQGesVCTransition_NavController)
+        {
             //说明这是我们的手势  干掉
             return YES;
         }

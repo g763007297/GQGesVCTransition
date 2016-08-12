@@ -10,7 +10,7 @@
 
 #import "GQGesVCTransition.h"
 
-@interface DetailViewController ()
+@interface DetailViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
 @end
 
@@ -44,21 +44,69 @@ UIView* CreatView (CGRect rect, UIColor *color){
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(50, 100, 200, 100)];
+    self.view.backgroundColor = [UIColor whiteColor];
     
-    scrollView.contentSize = CGSizeMake(600, 100);
+//    UICollectionViewFlowLayout *layout  = [[UICollectionViewFlowLayout alloc] init];
+//    
+//    [layout setScrollDirection:UICollectionViewScrollDirectionVertical];
+//    
+//    UICollectionView *collection =[[UICollectionView alloc] initWithFrame:CGRectMake(0, 80, 300, 300) collectionViewLayout:layout];
+//    
+//    collection.delegate = self;
+//    
+//    collection.dataSource = self;
+//    
+//    [collection registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"DemoCollectionCell"];
+//    
+//    [self.view addSubview:collection];
     
-    [scrollView addSubview:CreatView(CGRectMake(0, 0, 200, 100),[UIColor redColor])];
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(50, 100, 200, 300)];
     
-    [scrollView addSubview:CreatView(CGRectMake(200, 0, 200, 100),[UIColor greenColor])];
+    scrollView.backgroundColor = [UIColor yellowColor];
     
-    [scrollView addSubview:CreatView(CGRectMake(400, 0, 200, 100),[UIColor blueColor])];
+    scrollView.contentSize = CGSizeMake(600, 600);
+    
+    [scrollView addSubview:CreatView(CGRectMake(0, 0, 200, 300),[UIColor redColor])];
+    
+    [scrollView addSubview:CreatView(CGRectMake(200, 0, 200, 300),[UIColor greenColor])];
+    
+    [scrollView addSubview:CreatView(CGRectMake(400, 0, 200, 300),[UIColor blueColor])];
     
     scrollView.scrollEnabled = YES;
+    
+    [scrollView setPagingEnabled:YES];
     
     [self.view addSubview:scrollView];
     
     [self configureView];
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return 1000;
+}
+
+-(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *identifier = @"DemoCollectionCell";
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    cell.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1];
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(30, 30);
+}
+
+-(UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake(5, 5, 5, 5);
 }
 
 - (void)didReceiveMemoryWarning {

@@ -11,7 +11,6 @@
 		DFE5BDC21CD640C700AA69EE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE5BDC11CD640C700AA69EE /* AppDelegate.m */; };
 		DFE5BDC51CD640C700AA69EE /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE5BDC41CD640C700AA69EE /* MasterViewController.m */; };
 		DFE5BDC81CD640C700AA69EE /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE5BDC71CD640C700AA69EE /* DetailViewController.m */; };
-		DFE5BDCB1CD640C700AA69EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFE5BDC91CD640C700AA69EE /* Main.storyboard */; };
 		DFE5BDCD1CD640C700AA69EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE5BDCC1CD640C700AA69EE /* Assets.xcassets */; };
 		DFE5BDD01CD640C700AA69EE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFE5BDCE1CD640C700AA69EE /* LaunchScreen.storyboard */; };
 		DFE5BDDB1CD640C700AA69EE /* GQGesVCTransitionDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE5BDDA1CD640C700AA69EE /* GQGesVCTransitionDemoUITests.m */; };
@@ -37,7 +36,6 @@
 		DFE5BDC41CD640C700AA69EE /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
 		DFE5BDC61CD640C700AA69EE /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		DFE5BDC71CD640C700AA69EE /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
-		DFE5BDCA1CD640C700AA69EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DFE5BDCC1CD640C700AA69EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DFE5BDCF1CD640C700AA69EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DFE5BDD11CD640C700AA69EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -94,7 +92,6 @@
 				DFE5BDC41CD640C700AA69EE /* MasterViewController.m */,
 				DFE5BDC61CD640C700AA69EE /* DetailViewController.h */,
 				DFE5BDC71CD640C700AA69EE /* DetailViewController.m */,
-				DFE5BDC91CD640C700AA69EE /* Main.storyboard */,
 				DFE5BDCC1CD640C700AA69EE /* Assets.xcassets */,
 				DFE5BDCE1CD640C700AA69EE /* LaunchScreen.storyboard */,
 				DFE5BDD11CD640C700AA69EE /* Info.plist */,
@@ -179,6 +176,7 @@
 				TargetAttributes = {
 					DFE5BDB91CD640C700AA69EE = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = KT3C6DHFPC;
 					};
 					DFE5BDD51CD640C700AA69EE = {
 						CreatedOnToolsVersion = 7.3;
@@ -212,7 +210,6 @@
 			files = (
 				DFE5BDD01CD640C700AA69EE /* LaunchScreen.storyboard in Resources */,
 				DFE5BDCD1CD640C700AA69EE /* Assets.xcassets in Resources */,
-				DFE5BDCB1CD640C700AA69EE /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,14 +254,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		DFE5BDC91CD640C700AA69EE /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DFE5BDCA1CD640C700AA69EE /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		DFE5BDCE1CD640C700AA69EE /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -362,10 +351,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = GQGesVCTransitionDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = gq.GQGesVCTransitionDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "03dd3cab-9cc8-44c0-b5b9-94b03670ddb7";
 			};
 			name = Debug;
 		};
@@ -373,10 +365,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = GQGesVCTransitionDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = gq.GQGesVCTransitionDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "03dd3cab-9cc8-44c0-b5b9-94b03670ddb7";
 			};
 			name = Release;
 		};
@@ -421,6 +416,7 @@
 				DFE5BDE11CD640C700AA69EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DFE5BDE21CD640C700AA69EE /* Build configuration list for PBXNativeTarget "GQGesVCTransitionDemoUITests" */ = {
 			isa = XCConfigurationList;
@@ -429,6 +425,7 @@
 				DFE5BDE41CD640C700AA69EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
