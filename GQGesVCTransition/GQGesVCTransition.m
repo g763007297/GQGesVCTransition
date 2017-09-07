@@ -336,17 +336,19 @@ GQ_DYNAMIC_PROPERTY_OBJECT(__GQGesVCTransition_panGestureRecognizer, set__GQGesV
 {
     //取消scrollview上面的自带手势
     if (__GQGesRequestFailLoopScrollView&&!self.disableVCTransition&&!recognizer.__GQGesVCTransition_NavController) {
-        UIView *cell = [recognizer view];
-        CGPoint velocity = [recognizer velocityInView:cell];
-        //如果scrollview滑动到左边界并且是往左滑
-        CGPoint translation = [recognizer translationInView:cell];
-        if (translation.x == 0) {
-            return YES;
-        }
-        if (self.contentOffset.x<=0&&velocity.x>0) {
-            CGFloat ratio = (fabs(translation.x)/fabs(translation.y));
-            if ((translation.y>=0&&ratio>0.618f)||(translation.y<0&&ratio>0.2f)) {
-                return NO;
+        if ([recognizer isEqual:self.panGestureRecognizer]) {
+            UIView *cell = [recognizer view];
+            CGPoint velocity = [recognizer velocityInView:cell];
+            //如果scrollview滑动到左边界并且是往左滑
+            CGPoint translation = [recognizer translationInView:cell];
+            if (translation.x == 0) {
+                return YES;
+            }
+            if (self.contentOffset.x<=0&&velocity.x>0) {
+                CGFloat ratio = (fabs(translation.x)/fabs(translation.y));
+                if ((translation.y>=0&&ratio>0.618f)||(translation.y<0&&ratio>0.2f)) {
+                    return NO;
+                }
             }
         }
     }
